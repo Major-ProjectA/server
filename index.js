@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 
 import JobRoutes from "./routes/job-routes.js";
+import CompanyRoutes from "./routes/company-routes.js";
 
 const app = express();
 
@@ -11,8 +12,8 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
-app.use("/jobs", JobRoutes);
-
+app.use("/api/jobs", JobRoutes);
+app.use("/api/companies", CompanyRoutes);
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader(

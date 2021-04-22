@@ -13,15 +13,15 @@ export const getJobs = async (req, res) => {
   }
 };
 
-export const createJob = async (req, res) => {
-  const job = req.body;
-  console.log(job);
-  const newJob = new JobData(job);
-  try {
-    await newJob.save();
+// export const createJob = async (req, res) => {
+//   const job = req.body;
+//   console.log(job);
+//   const newJob = new JobData(job);
+//   try {
+//     await newJob.save();
 
-    res.status(201).json(newJob);
-  } catch (error) {
-    res.status(409).json({ message: error.message });
-  }
-};
+//     res.status(201).json(newJob);
+//   } catch (error) {
+//     res.status(409).json({ message: error.message });
+//   }
+// };
