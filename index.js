@@ -2,10 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
 
 import JobRoutes from "./routes/job-routes.js";
 import CompanyRoutes from "./routes/company-routes.js";
 import UserRoutes from "./routes/user-routes.js";
+
+dotenv.config();
 
 const app = express();
 
@@ -16,6 +19,7 @@ app.use(cors());
 app.use("/api/jobs", JobRoutes);
 app.use("/api/companies", CompanyRoutes);
 app.use("/api/users", UserRoutes);
+
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader(
