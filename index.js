@@ -5,6 +5,7 @@ import cors from "cors";
 
 import JobRoutes from "./routes/job-routes.js";
 import CompanyRoutes from "./routes/company-routes.js";
+import UserRoutes from "./routes/user-routes.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use("/api/jobs", JobRoutes);
 app.use("/api/companies", CompanyRoutes);
+app.use("/api/users", UserRoutes);
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader(
