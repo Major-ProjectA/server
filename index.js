@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import JobRoutes from "./routes/job-routes.js";
 import CompanyRoutes from "./routes/company-routes.js";
 import UserRoutes from "./routes/user-routes.js";
+import Categorytes from "./routes/category-routes.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
+app.use("/api/categories", Categorytes);
 app.use("/api/jobs", JobRoutes);
 app.use("/api/companies", CompanyRoutes);
 app.use("/api/users", UserRoutes);
