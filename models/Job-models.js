@@ -1,30 +1,26 @@
 import mongoose from "mongoose";
 
-const jobSchema = mongoose.Schema({
-  career: {
-    careerName: { type: String },
-    icon: { type: String },
-  },
+const JobSchema = mongoose.Schema({
+  imgCom: { type: String },
+
+  position: { type: String },
+
+  nameCom: { type: String },
 
   salary: {
-    type: Number,
-    default: 0,
+    from: { type: Number, default: 0 },
+    to: { type: Number, default: 0 },
   },
 
-  request: { type: String },
+  workingTime: { type: String },
 
-  test: {
-    testObj: {
-      obj1: { type: String },
-      obj2: { type: String },
-      obj3: { type: String },
-    },
-    testObj1: {
-      obj4: { type: String },
-    },
+  location: {
+    street: { type: String },
+    district: { type: String },
+    city: { type: String },
   },
 });
 
-const Jobs = mongoose.model("Job", jobSchema);
+const Jobs = mongoose.model("Job", JobSchema);
 
 export default Jobs;
