@@ -1,1 +1,3 @@
-# server
+## SERVER 🦔
+
+- Start: `npm start`
