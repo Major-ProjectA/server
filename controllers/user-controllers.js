@@ -5,71 +5,73 @@ import jwt from "jsonwebtoken";
 export const signup = async (req, res, next) => {
   try {
     const { userName, email, passwordHash, confirmPassword } = req.body;
+
     if (!userName || !email || !passwordHash || !confirmPassword)
-      return res.status(404).json({ errorMessage: "Please enter all required fields." });
+      return res
+        .status(400)
+        .json({ errorMessage: "Please enter all required fields." });
+
     if (passwordHash.length < 6)
-      return res.status(404).json({ errorMessage: "Please enter a password of at least 6 characters." });
+      return res.status(400).json({
+        errorMessage: "Please enter a password of at least 6 characters.",
+      });
+
     if (passwordHash !== confirmPassword)
-      return res.status(404).json({ errorMessage: "Please enter the same password twice." });
-    
-    let existingUser; 
-    try {
-      existingUser = await User.findOne({email: email})
-    } catch (error) {
-      res.status(404).json({ errorMessage: "Something went wrong, please try again." });
-    }
-  
-    if(existingUser){
-      res.status(404).json({ errorMessage: "Email is existed, please try again with another email." });
-    }
-  
+      return res.status(400).json({
+        errorMessage: "Please enter the same password twice.",
+      });
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser)
+      return res.status(400).json({
+        errorMessage: "An account with this email already exists.",
+      });
+
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(passwordHash, salt);
 
-    const createdUser = new User({
+    const newUser = new User({
       userName,
       email,
-      password
-    })
-  
-    try {
-      await createdUser.save();
-      const token = jwt.sign(
-        {
-          user: createdUser._id,
-        },
-        process.env.JWT_SECRET
-      );
-  
-      res
-        .cookie("token", token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
-        .send();
-    
-      res.status(201).json ({
-        user: createdUser.toObject ({
-          getters:true
-        })
+      password,
+    });
+
+    const savedUser = await newUser.save();
+
+    const token = jwt.sign(
+      {
+        user: savedUser._id,
+      },
+      process.env.JWT_SECRET
+    );
+
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .status(201)
+      .json({
+        Message: "Sign up successfull.",
+        user: savedUser.toObject({ getters: true }),
       });
-    } catch (error) {
-      res.status(404).json({ errorMessage: "" });
-    }
   } catch (err) {
     console.error(err);
     res.status(500).send();
   }
 };
-  
+
 export const login = async (req, res, next) => {
-
+  try {
     const { email, passwordHash } = req.body;
-    if(!email || !passwordHash)
-      return res.status(404).json({ errorMessage: "Please enter all required fields." });
 
-    const existingUser = await User.findOne({ email: email });
+    if (!email || !passwordHash)
+      return res
+        .status(400)
+        .json({ errorMessage: "Please enter all required fields." });
+
+    const existingUser = await User.findOne({ email });
     if (!existingUser)
       return res.status(401).json({ errorMessage: "Wrong email or password." });
 
@@ -79,23 +81,50 @@ export const login = async (req, res, next) => {
     );
     if (!passwordCorrect)
       return res.status(401).json({ errorMessage: "Wrong email or password." });
-
-    const token = jwt.sign ({
-      user: existingUser._id,
+    const token = jwt.sign(
+      {
+        user: existingUser._id,
       },
       process.env.JWT_SECRET
     );
 
-    if(!existingUser || existingUser.passwordCorrect !== passwordpasswordCorrect)
-    {
-      res.status(404).json({ message: "Email or Password is wrong, please try again." });
-    }
-    res.json({message: 'Signed in successfull.', user: existingUser.toObject({getters:true})});
-  
-    res.cookie("token", token, {
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .status(202)
+      .json({
+        Message: "Sign in successfull.",
+        user: existingUser.toObject({ getters: true }),
+      });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+};
+
+export const logout = async (req, res, next) => {
+  res
+    .cookie("token", "", {
       httpOnly: true,
+      expires: new Date(0),
       secure: true,
       sameSite: "none",
-    }).send();
+    })
+    .status(203)
+    .json({ Message: "Log out successfull." });
+};
 
+export const loggedIn = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.json(false);
+
+    jwt.verify(token, process.env.JWT_SECRET);
+    res.send(true);
+  } catch (err) {
+    res.json(false);
+  }
 };
