@@ -104,3 +104,27 @@ export const login = async (req, res, next) => {
     res.status(500).send();
   }
 };
+
+export const logout = async (req, res, next) => {
+  res
+    .cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      secure: true,
+      sameSite: "none",
+    })
+    .status(203)
+    .json({ Message: "Log out successfull." });
+};
+
+export const loggedIn = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.json(false);
+
+    jwt.verify(token, process.env.JWT_SECRET);
+    res.send(true);
+  } catch (err) {
+    res.json(false);
+  }
+};
