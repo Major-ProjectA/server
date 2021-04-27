@@ -1,3 +1,0 @@
-## SERVER 🐼
-
-- Start: `npm start`
