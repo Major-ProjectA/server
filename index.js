@@ -16,10 +16,6 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
-app.use("/api/categories", CategoryRoutes);
-app.use("/api/jobs", JobRoutes);
-app.use("/api/users", UserRoutes);
-
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader(
@@ -30,12 +26,16 @@ app.use("/api/users", UserRoutes);
 //   next();
 // });
 
-const CONECTION_URL =
-  "mongodb+srv://newuser:12345@cluster0.ksqz1.mongodb.net/joblisting?retryWrites=true&w=majority";
+app.use("/api/categories", CategoryRoutes);
+app.use("/api/jobs", JobRoutes);
+app.use("/api/users", UserRoutes);
+
+// const CONECTION_URL =
+//   "mongodb+srv://newuser:12345@cluster0.ksqz1.mongodb.net/joblisting?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 5000;
 
 mongoose
-  .connect(CONECTION_URL, {
+  .connect(process.env.MDB_CONNECT1, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

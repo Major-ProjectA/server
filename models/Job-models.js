@@ -1,24 +1,31 @@
 import mongoose from "mongoose";
 
-const JobSchema = mongoose.Schema({
-  imgCom: { type: String },
+export const Schema = mongoose.Schema;
 
-  position: { type: String },
-
-  nameCom: { type: String },
-
-  salary: {
-    from: { type: Number, default: 0 },
-    to: { type: Number, default: 0 },
+const JobSchema = new Schema({
+  detail: { type: String },
+  benifit: { type: String },
+  contact: {
+    contactName: { type: String },
+    contactEmail: { type: String },
+    contactAddress: { type: String },
+    contactPhone: { type: String },
   },
-
+  certification: { type: String },
+  salary: {
+    from: { type: String },
+    to: { type: String },
+  },
+  requirement: { type: String },
+  imgCom: { type: String },
   workingTime: { type: String },
-
+  position: { type: String },
   location: {
     street: { type: String },
     district: { type: String },
     city: { type: String },
   },
+  nameCom: { type: String },
 });
 
 const Jobs = mongoose.model("Job", JobSchema);
