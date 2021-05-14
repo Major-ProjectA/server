@@ -3,15 +3,21 @@ import express from "express";
 import {
   signup,
   login,
-  logout,
-  loggedIn,
+  getUsers,
+  getUserById,
+  updateUserByAdmin,
+  deleteUser,
+  getUserByUsername,
 } from "../controllers/user-controllers.js";
 
 const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/login", login);
-router.get("/logout", logout);
-router.get("/loggedIn", loggedIn);
+router.get("/", getUsers);
+router.get("/:uid", getUserById);
+router.get("/uusername", getUserByUsername);
+router.patch("/:uid", updateUserByAdmin);
+router.delete("/:uid", deleteUser);
 
 export default router;

@@ -1,10 +1,34 @@
 import User from "../models/User-models.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+
+export const getUsers = async (req, res, next) => {
+  let user;
+  try {
+    user = await User.find({}, '-password')
+  } catch {
+    res.status(500).json("Load user data failed.");
+  }
+  res.json({ user: user.map(u => u.toObject({getters:true})) });
+};
 
 export const signup = async (req, res, next) => {
   try {
-    const { userName, email, passwordHash, confirmPassword } = req.body;
+    const { 
+      userName, 
+      email, 
+      passwordHash, 
+      confirmPassword, 
+      firstname, 
+      lastname,
+      dob,
+      street,
+      city,
+      district,
+      role = "user",
+      gender,
+      tel,
+    } = req.body;
 
     if (!userName || !email || !passwordHash || !confirmPassword)
       return res
@@ -24,38 +48,31 @@ export const signup = async (req, res, next) => {
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({
-        errorMessage: "An account with this email already exists.",
+        errorMessage: "An account with this email already existed.",
       });
 
-    const salt = await bcrypt.genSalt();
-    const password = await bcrypt.hash(passwordHash, salt);
+    const password = await bcrypt.hash(passwordHash, 8);
 
-    const newUser = new User({
+    const createdUser = new User({
       userName,
       email,
       password,
-    });
+      firstname, 
+      lastname,
+      dob,
+      address: { street, city, district },
+      role,
+      gender,
+      tel,
+    })
 
-    const savedUser = await newUser.save();
-
-    const token = jwt.sign(
-      {
-        user: savedUser._id,
-      },
-      process.env.JWT_SECRET
-    );
-
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      })
-      .status(201)
-      .json({
-        Message: "Sign up successfull.",
-        user: savedUser.toObject({ getters: true }),
-      });
+    try {
+      await createdUser.save();
+    } catch (error) {
+      return res.status(400).json({ errorMessage: "Some thing went wrong, please try again"});
+    }
+  
+    res.status(201).json({Message: "Sign up successfull.", user: createdUser.toObject({getters:true})});
   } catch (err) {
     console.error(err);
     res.status(500).send();
@@ -70,61 +87,100 @@ export const login = async (req, res, next) => {
       return res
         .status(400)
         .json({ errorMessage: "Please enter all required fields." });
-
     const existingUser = await User.findOne({ email });
     if (!existingUser)
-      return res.status(401).json({ errorMessage: "Wrong email or password." });
-
+      return res.status(401).json({ errorMessage: "Email is not existed, please try another email." });
     const passwordCorrect = await bcrypt.compare(
       passwordHash,
       existingUser.password
     );
     if (!passwordCorrect)
-      return res.status(401).json({ errorMessage: "Wrong email or password." });
-    const token = jwt.sign(
-      {
-        user: existingUser._id,
-      },
-      process.env.JWT_SECRET
-    );
-
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      })
-      .status(202)
-      .json({
-        Message: "Sign in successfull.",
-        user: existingUser.toObject({ getters: true }),
-      });
+      return res.status(401).json({ errorMessage: "Wrong email or password, please try again." });
+    res.status(201).json({Message: "Sign in successfull.", user: existingUser.toObject({getters:true})});
   } catch (err) {
     console.error(err);
     res.status(500).send();
   }
 };
 
-export const logout = async (req, res, next) => {
-  res
-    .cookie("token", "", {
-      httpOnly: true,
-      expires: new Date(0),
-      secure: true,
-      sameSite: "none",
-    })
-    .status(203)
-    .json({ Message: "Log out successfull." });
-};
-
-export const loggedIn = async (req, res, next) => {
+export const getUserById = async (req, res, next) => {
+  const userId = req.params.uid;
+  let user;
   try {
-    const token = req.cookies.token;
-    if (!token) return res.json(false);
-
-    jwt.verify(token, process.env.JWT_SECRET);
-    res.send(true);
+    user = await User.findById(userId);
   } catch (err) {
-    res.json(false);
+    res.status(500).json("Can not find this user.");
   }
+  if (!user) {
+    return res.status(500).json("Can not find this user.");
+  }
+  res.json({ user: user.toObject({getters:true}) });
 };
+
+export const getUserByUsername = async (req, res, next) => {
+  const userName = req.params.uusername;
+  let user;
+  try {
+    user = await User.findOne(userName);
+  } catch (err) {
+    res.status(500).json("Something went wrong.");
+  }
+  if (!user) {
+    return res.status(500).json("Can not find this user.");
+  }
+  res.json({ user: user.toObject({getters:true}) });
+};
+
+export const updateUserByAdmin = async (req, res, next) => {
+  const { userName, email, role } = req.body;
+  const userId = req.params.uid;
+
+  if (!userName || !email || !role)
+    return res
+          .status(400)
+          .json({ errorMessage: "All fields should not empty." });
+
+  let update;
+  try {
+    update = await User.findById(userId);
+  } catch {
+    return res.status(401).json({ errorMessage: "Can not find this user." });
+  }
+
+  update.userName = userName;
+  update.email = email;
+  update.role = role;
+
+  try {
+    await update.save();
+  } catch {
+    return res.status(400).json({ errorMessage: "Update user failed, please try again." });
+  }
+  res.status(201).json({Message: "Update user successfully.", user: update.toObject({getters:true})});
+}
+
+export const deleteUser = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+  try {
+    user = await User.findById(userId).populate('cvs');
+    console.log(user)
+  } catch {
+    return res.status(500).json({ errorMessage: "You can not delete this user." });
+  }
+
+  if(!user) {
+    return res.status(500).json({ errorMessage: "Can not find this user." });
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await user.remove({session: sess})
+    await sess.commitTransaction()
+  } catch {
+    return res.status(500).json({ errorMessage: "Something went wrong, please try again." });
+  }
+  res.status(201).json({ Message: "Delete user successfully." })
+}
