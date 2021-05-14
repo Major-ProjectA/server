@@ -1,4 +1,5 @@
 import JobData from "../models/Job-models.js";
+import dayjs from "dayjs";
 
 //Filter, Sorting and Paginating
 class APIfeatures {
@@ -66,14 +67,33 @@ export const getJobs = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+/**********************************************************/
+//GET ALL JOBHOT
+export const getJobHot = async (req, res) => {
+  try {
+    const featuresjobhot = new APIfeatures(JobData.find(), req.query)
+      .filtering()
+      .paginating();
 
+    const jobhot = await featuresjobhot.query;
+
+    res.json({
+      status: "success",
+      result: jobhot.length,
+      jobhot: jobhot,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
+/**********************************************************/
 //CREATE JOBS
 export const createJobs = async (req, res) => {
   try {
     const {
       imgCom,
       detail,
-      benifit,
+      benefit,
       contact: { contactName, contactEmail, contactAddress, contactPhone },
       certification,
       salary: { from, to },
@@ -82,10 +102,17 @@ export const createJobs = async (req, res) => {
       workingTime,
       position,
       location: { street, district, city },
+      siteCom,
+      thumbnail,
+      category,
+      isHot,
+      numofRecruit,
+      exp,
+      createDay,
     } = req.body;
     const createdJob = new JobData({
       detail,
-      benifit,
+      benefit,
       contact: { contactName, contactEmail, contactAddress, contactPhone },
       certification,
       salary: { from, to },
@@ -95,6 +122,15 @@ export const createJobs = async (req, res) => {
       position: position.toLowerCase(),
       location: { street, district, city },
       nameCom,
+      siteCom,
+      thumbnail,
+      category,
+      isHot,
+      numofRecruit,
+      exp,
+      createDay,
+      startDay: dayjs(),
+      endDay: dayjs().add("30", "day"),
     });
 
     await createdJob.save();
@@ -103,7 +139,7 @@ export const createJobs = async (req, res) => {
     res.status(409).json({ message: err.message });
   }
 };
-
+/**********************************************************/
 //DELETE JOB
 export const deleteJobs = async (req, res) => {
   try {
@@ -113,14 +149,14 @@ export const deleteJobs = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
-
+/**********************************************************/
 //UPDATE JOB
 export const updateJobs = async (req, res) => {
   try {
     const {
       imgCom,
       detail,
-      benifit,
+      benefit,
       contact: { contactName, contactEmail, contactAddress, contactPhone },
       certification,
       salary: { from, to },
@@ -129,22 +165,38 @@ export const updateJobs = async (req, res) => {
       workingTime,
       position,
       location: { street, district, city },
+      siteCom,
+      thumbnail,
+      category,
+      isHot,
+      numofRecruit,
+      exp,
+      createDay,
     } = req.body;
 
     await JobData.findOneAndUpdate(
       { _id: req.params.id },
       {
         detail,
-        benifit,
+        benefit,
         contact: { contactName, contactEmail, contactAddress, contactPhone },
         certification,
         salary: { from, to },
         requirement,
         imgCom,
         workingTime,
-        position,
+        position: position.toLowerCase(),
         location: { street, district, city },
         nameCom,
+        siteCom,
+        thumbnail,
+        category,
+        isHot,
+        numofRecruit,
+        exp,
+        createDay,
+        startDay: dayjs(),
+        endDay: dayjs().add("30", "day"),
       }
     );
 
@@ -153,42 +205,4 @@ export const updateJobs = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
-
 /**********************************************************/
-// GET ALL Job
-// export const getJobs = async (req, res) => {
-//   try {
-//     let query = JobData.find();
-
-//     const page = parseInt(req.query.page) || 1;
-//     const pageSize = parseInt(req.query.limit) || 6;
-//     const skip = (page - 1) * pageSize;
-//     const total = await JobData.countDocuments();
-
-//     const pages = Math.ceil(total / pageSize);
-//     query = query.skip(skip).limit(pageSize);
-
-//     if (page > pages) {
-//       res.status(400).json({
-//         status: "fail",
-//         message: "No page found",
-//       });
-//     }
-
-//     const result = await query;
-
-//     res.status(200).json({
-//       status: "success",
-//       count: result.length,
-//       page,
-//       pages,
-//       data: result,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(5000).json({
-//       status: "error",
-//       message: "Server Error",
-//     });
-//   }
-// };

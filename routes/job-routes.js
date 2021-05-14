@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getJobs,
+  getJobHot,
   createJobs,
   deleteJobs,
   updateJobs,
@@ -8,6 +9,7 @@ import {
 
 const router = express.Router();
 router.get("/", getJobs);
+router.get("/jobhot", getJobHot);
 router.post("/", createJobs);
 router.delete("/:id", deleteJobs);
 router.put("/:id", updateJobs);
