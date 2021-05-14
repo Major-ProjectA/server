@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-//import uniqueValidator from "mongoose-unique-validator";
 
 export const Schema = mongoose.Schema;
 
@@ -22,6 +21,5 @@ const UserSchema = new Schema({
   jobs : [{type : mongoose.Schema.Types.ObjectId, ref: 'Job'}]
 });
 
-//UserSchema.plugin(uniqueValidator);
 const User = mongoose.model("User", UserSchema);
 export default User;
