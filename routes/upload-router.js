@@ -21,12 +21,12 @@ router.post("/upload", (req, res) => {
     const file = req.files.photo;
     // 1024 * 1024 = 1MB
     if (file.size > 1024 * 1024) {
-      //
+      removeTmp(file.tempFilePath);
       return res.status(400).json({ msg: "Size too large" });
     }
 
     if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
-      //
+      removeTmp(file.tempFilePath);
       return res.status(400).json({ msg: "File format is incorrect." });
     }
 
@@ -35,9 +35,9 @@ router.post("/upload", (req, res) => {
       { folder: "Job-Listing" },
       async (err, result) => {
         if (err) throw err;
-        //
-        res.json({ result });
-        // res.json({ public_id: result.public_id, url: result.secure_url });
+        removeTmp(file.tempFilePath);
+        // res.json({ result });
+        res.json({ public_id: result.public_id, url: result.secure_url });
       }
     );
   } catch (err) {
@@ -60,12 +60,10 @@ router.post("/destroy", (req, res) => {
   }
 });
 
-// removeTmp(file.tempFilePath);
-
-// const removeTmp = (path) => {
-//   fs.unlink(path, (err) => {
-//     if (err) throw err;
-//   });
-// };
+const removeTmp = (path) => {
+  fs.unlink(path, (err) => {
+    if (err) throw err;
+  });
+};
 
 export default router;

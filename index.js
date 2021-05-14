@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import UserRoutes from "./routes/user-routes.js";
 import CategoryRoutes from "./routes/category-routes.js";
 import JobRoutes from "./routes/job-routes.js";
-import CVRoutes from "./routes/cv-routes.js"
+import CVRoutes from "./routes/cv-routes.js";
 
 dotenv.config();
 
@@ -37,7 +37,7 @@ app.use("/api/cvs", CVRoutes);
 const PORT = process.env.PORT || 5000;
 
 mongoose
-  .connect(process.env.MDB_CONNECT1, {
+  .connect(process.env.MDB_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
