@@ -1,40 +1,45 @@
 import mongoose from "mongoose";
 export const Schema = mongoose.Schema;
 
-const JobSchema = new Schema({
-  detail: { type: String, required: true },
-  benefit: { type: String, required: true },
-  contact: {
-    contactName: { type: String, required: true },
-    contactEmail: { type: String, required: true },
-    contactAddress: { type: String, required: true },
-    contactPhone: { type: String, required: true },
+const JobSchema = new Schema(
+  {
+    jobId: { type: String, trim: true, require: true },
+    detail: { type: String, require: true },
+    benefit: { type: String, required: true },
+    contact: {
+      contactName: { type: String, require: true },
+      contactEmail: { type: String, require: true },
+      contactAddress: { type: String, require: true },
+      contactPhone: { type: String, require: true },
+    },
+    certification: { type: String, require: true },
+    salary: {
+      from: { type: Number, require: true },
+      to: { type: Number, require: true },
+    },
+    requirement: { type: String, require: true },
+    // imgCom: { type: String, require: true },
+    workingTime: { type: String, require: true },
+    position: { type: String, required: true },
+    location: {
+      street: { type: String, require: true },
+      district: { type: String, require: true },
+      city: { type: String, require: true },
+    },
+    nameCom: { type: String, require: true },
+    siteCom: { type: String, require: true },
+    thumbnail: { type: String, require: true },
+    category: { type: String, require: true },
+    // isHot: { type: String },
+    numofRecruit: { type: Number, require: true },
+    experience: { type: String, require: true },
+    startDay: { type: Date, require: true },
+    endDay: { type: Date, require: true },
   },
-  certification: { type: String, required: true },
-  salary: {
-    from: { type: Number, required: true },
-    to: { type: Number, required: true },
-  },
-  requirement: { type: String, required: true },
-  imgCom: { type: String, required: true },
-  workingTime: { type: String, required: true },
-  position: { type: String, required: true },
-  location: {
-    street: { type: String, required: true },
-    district: { type: String, required: true },
-    city: { type: String, required: true },
-  },
-  nameCom: { type: String, required: true },
-  siteCom: { type: String, required: true },
-  thumbnail: { type: String, required: true },
-  category: { type: String, required: true },
-  isHot: { type: String, required: true },
-  numofRecruit: { type: Number, required: true },
-  exp: { type: String, required: true },
-  createDay: { type: Date, default: null },
-  startDay: { type: Date },
-  endDay: { type: Date },
-});
+  {
+    timestamps: true, //important
+  }
+);
 
 const Jobs = mongoose.model("Job", JobSchema);
 export default Jobs;

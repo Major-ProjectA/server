@@ -18,7 +18,7 @@ router.post("/upload", (req, res) => {
       return res.status(400).json({ msg: "No files were uploaded." });
     }
 
-    const file = req.files.photo;
+    const file = req.files.file;
     // 1024 * 1024 = 1MB
     if (file.size > 1024 * 1024) {
       removeTmp(file.tempFilePath);

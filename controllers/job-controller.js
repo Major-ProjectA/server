@@ -91,7 +91,8 @@ export const getJobHot = async (req, res) => {
 export const createJobs = async (req, res) => {
   try {
     const {
-      imgCom,
+      jobId,
+      // imgCom,
       detail,
       benefit,
       contact: { contactName, contactEmail, contactAddress, contactPhone },
@@ -105,19 +106,19 @@ export const createJobs = async (req, res) => {
       siteCom,
       thumbnail,
       category,
-      isHot,
+      // isHot,
       numofRecruit,
-      exp,
-      createDay,
+      experience,
     } = req.body;
     const createdJob = new JobData({
+      jobId,
       detail,
       benefit,
       contact: { contactName, contactEmail, contactAddress, contactPhone },
       certification,
       salary: { from, to },
       requirement,
-      imgCom,
+      // imgCom,
       workingTime,
       position: position.toLowerCase(),
       location: { street, district, city },
@@ -125,10 +126,9 @@ export const createJobs = async (req, res) => {
       siteCom,
       thumbnail,
       category,
-      isHot,
+      // isHot,
       numofRecruit,
-      exp,
-      createDay,
+      experience,
       startDay: dayjs(),
       endDay: dayjs().add("30", "day"),
     });
@@ -171,7 +171,6 @@ export const updateJobs = async (req, res) => {
       isHot,
       numofRecruit,
       exp,
-      createDay,
     } = req.body;
 
     await JobData.findOneAndUpdate(
@@ -194,7 +193,6 @@ export const updateJobs = async (req, res) => {
         isHot,
         numofRecruit,
         exp,
-        createDay,
         startDay: dayjs(),
         endDay: dayjs().add("30", "day"),
       }
