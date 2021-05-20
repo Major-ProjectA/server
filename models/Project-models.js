@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const ProjectSchema = mongoose.Schema({
-  titleProject: {
+  projectName: {
     type: String,
     required: true,
   },
-  desProject: {
+  projectDescription: {
     type: String,
     required: true,
   },

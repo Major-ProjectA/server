@@ -1,15 +1,19 @@
 import mongoose from "mongoose";
 
 const EducationSchema = mongoose.Schema({
-  schoolName: {
-    type: String,
-    required: true,
+  college: {
+    collegeName: { type: String, required: true },
+    collegeMajor: { type: String, require: true },
+    collegeQualification: { type: String, require: true },
   },
-  qualification: {
-    type: String,
-    required: true,
+
+  school: {
+    schoolName: { type: String, required: false },
+    schoolMajor: { type: String, require: false },
+    schoolQualification: { type: String, require: false },
   },
 });
 
-const Education = mongoose.model("Project", EducationSchema);
+const Education = mongoose.model("Education", EducationSchema);
+
 export default Education;
