@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 
 const EducationSchema = mongoose.Schema({
   college: {
-    collegeName: { type: String, required: true },
-    collegeMajor: { type: String, require: true },
-    collegeQualification: { type: String, require: true },
+    collegeName: { type: String, default: "" },
+    collegeMajor: { type: String, default: "" },
+    collegeQualification: { type: String, default: "" },
   },
 
   school: {
-    schoolName: { type: String, required: false },
-    schoolMajor: { type: String, require: false },
-    schoolQualification: { type: String, require: false },
+    schoolName: { type: String, default: "" },
+    schoolMajor: { type: String, default: "" },
+    schoolQualification: { type: String, default: "" },
   },
 });
 

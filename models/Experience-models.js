@@ -3,19 +3,19 @@ import mongoose from "mongoose";
 const ExperienceSchema = mongoose.Schema({
   companyName: {
     type: String,
-    required: true,
+    default: '',
   },
   duration: {
     type: String,
-    required: true,
+    default: '',
   },
   position: {
     type: String,
-    required: true,
+    default: '',
   },
   expDescription: {
     type: String,
-    required: true,
+    default: '',
   },
 });
 

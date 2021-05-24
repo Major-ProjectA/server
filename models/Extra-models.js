@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const ExtraSchema = mongoose.Schema({
   skill: {
     type: String,
-    required: true,
+    default: '',
   },
   interest: {
     type: String,
-    required: true,
+    default: '',
   },
 });
 

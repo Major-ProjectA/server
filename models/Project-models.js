@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const ProjectSchema = mongoose.Schema({
   projectName: {
     type: String,
-    required: true,
+    default: "",
   },
   projectDescription: {
     type: String,
-    required: true,
+    default: "",
   },
 });
 
