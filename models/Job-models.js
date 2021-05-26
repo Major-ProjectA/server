@@ -18,7 +18,7 @@ const JobSchema = new Schema(
       to: { type: Number, require: true },
     },
     requirement: { type: String, require: true },
-    // imgCom: { type: String, require: true },
+    imgCom: { type: String, require: true },
     workingTime: { type: String, require: true },
     position: { type: String, required: true },
     location: {
@@ -30,7 +30,8 @@ const JobSchema = new Schema(
     siteCom: { type: String, require: true },
     thumbnail: { type: String, require: true },
     category: { type: String, require: true },
-    // isHot: { type: String },
+    isHot: { type: String },
+    otherInfo: { type: String, require: true },
     numofRecruit: { type: Number, require: true },
     experience: { type: String, require: true },
     startDay: { type: Date, require: true },

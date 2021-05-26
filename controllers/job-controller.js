@@ -92,7 +92,7 @@ export const createJobs = async (req, res) => {
   try {
     const {
       jobId,
-      // imgCom,
+      imgCom,
       detail,
       benefit,
       contact: { contactName, contactEmail, contactAddress, contactPhone },
@@ -106,7 +106,8 @@ export const createJobs = async (req, res) => {
       siteCom,
       thumbnail,
       category,
-      // isHot,
+      otherInfo,
+      isHot,
       numofRecruit,
       experience,
     } = req.body;
@@ -118,7 +119,7 @@ export const createJobs = async (req, res) => {
       certification,
       salary: { from, to },
       requirement,
-      // imgCom,
+      imgCom,
       workingTime,
       position: position.toLowerCase(),
       location: { street, district, city },
@@ -126,7 +127,8 @@ export const createJobs = async (req, res) => {
       siteCom,
       thumbnail,
       category,
-      // isHot,
+      otherInfo,
+      isHot,
       numofRecruit,
       experience,
       startDay: dayjs(),
