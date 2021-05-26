@@ -67,8 +67,8 @@ export const createProfile = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await createdEducation.save({ session: sess });
-    cv.education.push(createdEducation);
+    await createdProfile.save({ session: sess });
+    cv.profile.push(createdProfile);
     await cv.save({ sess: sess });
     await sess.commitTransaction();
   } catch (err) {
@@ -136,8 +136,8 @@ export const createEducation = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await createdProject.save({ session: sess });
-    cv.project.push(createdProject);
+    await createdEducation.save({ session: sess });
+    cv.education.push(createdEducation);
     await cv.save({ sess: sess });
     await sess.commitTransaction();
   } catch (err) {
@@ -192,8 +192,8 @@ export const createProject = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await createdExperience.save({ session: sess });
-    cv.experience.push(createdExperience);
+    await createdProject.save({ session: sess });
+    cv.project.push(createdProject);
     await cv.save({ sess: sess });
     await sess.commitTransaction();
   } catch (err) {
@@ -253,8 +253,8 @@ export const createExperience = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await createdExtra.save({ session: sess });
-    cv.extra.push(createdExtra);
+    await createdExperience.save({ session: sess });
+    cv.experience.push(createdExperience);
     await cv.save({ sess: sess });
     await sess.commitTransaction();
   } catch (err) {
@@ -304,9 +304,9 @@ export const createExtra = async (req, res, next) => {
 
   const createdExtra = new Extra({ cvId });
 
-  let extra;
+  let cv;
   try {
-    extra = await Extra.findById(extraId);
+    cv = await CV.findById(cvId);
   } catch {
     return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
   }
