@@ -1,13 +1,9 @@
 import mongoose from "mongoose";
 
 const ExtraSchema = mongoose.Schema({
-  skill: {
+  addInfor: {
     type: String,
-    required: true,
-  },
-  interest: {
-    type: String,
-    required: true,
+    default: '',
   },
 });
 

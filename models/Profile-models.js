@@ -3,27 +3,27 @@ import mongoose from "mongoose";
 const ProfileSchema = mongoose.Schema({
   firstname: {
     type: String,
-    required: true,
+    default: ""
   },
   lastname: {
     type: String,
-    required: true,
+    default: ""
   },
   dob: {
     type: String,
-    required: true,
+    default: ""
   },
   email: {
     type: String,
-    required: true,
+    default: ""
   },
   address: {
     type: String,
-    required: true,
+    default: ""
   },
   phone: {
     type: String,
-    required: true,
+    default: ""
   },
 });
 
