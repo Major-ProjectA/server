@@ -45,7 +45,7 @@ export const createCV = async (req, res, next) => {
     console.log(err);
     return res.status(402).json({ errorMessage: "Fail." });
   }
-  res.status(201).json({ user: createdCV });
+  res.status(201).json({ cv: createdCV });
 }
 
 export const createProfile = async (req, res, next) => {
@@ -204,10 +204,7 @@ export const createProject = async (req, res, next) => {
 };
 
 export const updateProject = async (req, res, next) => {
-  const {
-    projectName,
-    projectDescription,
-  } = req.body;
+  const proj = req.body.project;
 
   const projectId = req.params.projectId;
 
@@ -218,8 +215,7 @@ export const updateProject = async (req, res, next) => {
     return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
-  project.projectName = projectName;
-  project.projectDescription = projectDescription;
+  project.project = proj
 
   if (!projectId) {
     return res.status(401).json({ errorMessage: "Can not find this project, please try again" });
