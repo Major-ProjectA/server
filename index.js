@@ -39,8 +39,6 @@ app.use("/api/photo", UploadRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/cvs", CVRoutes);
 
-// const CONECTION_URL =
-//   "mongodb+srv://newuser:12345@cluster0.ksqz1.mongodb.net/joblisting?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 5000;
 
 mongoose

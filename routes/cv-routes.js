@@ -1,5 +1,4 @@
 import express from "express";
-
 import { 
     getCv, getCvById, getCvByUserId, createProfile, updateCv, deleteCv, createCV, createEducation, createProject, createExperience, updateProfile, updateEducation, updateProject, updateExperience, createExtra, updateExtra
 } from "../controllers/cv-controllers.js";
@@ -11,6 +10,7 @@ router.get("/:pid", getCvById);
 router.get("/user/:pid", getCvByUserId);
 
 router.post("/createcv/:userId", createCV);
+router.patch("/updateCv/:cvId", updateCv);
 
 router.post("/createProfile/:cvId", createProfile);
 router.patch("/updateProfile/:profileId", updateProfile);
