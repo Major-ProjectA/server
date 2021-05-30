@@ -6,8 +6,8 @@ import {
 const router = express.Router();
 
 router.get("/", getCv);
-router.get("/:pid", getCvById);
-router.get("/user/:pid", getCvByUserId);
+router.get("/:cvId", getCvById);
+router.get("/user/:userId", getCvByUserId);
 
 router.post("/createcv/:userId", createCV);
 router.patch("/updateCv/:cvId", updateCv);
@@ -27,7 +27,6 @@ router.patch("/updateExperience/:expId", updateExperience);
 router.post("/createExtra/:cvId", createExtra);
 router.patch("/updateExtra/:extraId", updateExtra);
 
-router.patch("/:pid", updateCv);
-router.delete("/:pid", deleteCv);
+router.delete("/:cvId", deleteCv);
 
 export default router;
