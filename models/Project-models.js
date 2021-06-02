@@ -1,14 +1,7 @@
 import mongoose from "mongoose";
 
 const ProjectSchema = mongoose.Schema({
-  projectName: {
-    type: String,
-    default: "",
-  },
-  projectDescription: {
-    type: String,
-    default: "",
-  },
+  project : []
 });
 
 const Project = mongoose.model("Project", ProjectSchema);

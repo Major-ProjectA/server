@@ -19,15 +19,7 @@ export const signup = async (req, res, next) => {
       email, 
       passwordHash, 
       confirmPassword, 
-      firstname, 
-      lastname,
-      dob,
-      street,
-      city,
-      district,
       role = "user",
-      gender,
-      tel,
     } = req.body;
 
     if (!userName || !email || !passwordHash || !confirmPassword)
@@ -57,13 +49,7 @@ export const signup = async (req, res, next) => {
       userName,
       email,
       password,
-      firstname, 
-      lastname,
-      dob,
-      address: { street, city, district },
       role,
-      gender,
-      tel,
     })
 
     try {

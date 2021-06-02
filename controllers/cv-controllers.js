@@ -7,20 +7,61 @@ import Experience from "../models/Experience-models.js";
 import Extra from "../models/Extra-models.js";
 
 import mongoose from "mongoose";
+import Cv from "../models/Cv-models.js";
 
 export const getCv = async (req, res, next) => {
+  let cv;
+  try {
+    cv = await Cv.find({});
+  } catch {
+    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+  }
+  res.json({ cv: cv.map((u) => u.toObject({ getters: true })) });
 }
 
 export const getCvById = async (req, res, next) => {
+  const cvId = req.params.cvId;
+
+  let cv;
+  try {
+    cv = await Cv.findById(cvId);
+  } catch {
+    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+  }
+
+  if (!cv) {
+    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+  }
+  res.json({ cv: cv.toObject({ getters: true }) });
 }
 
 export const getCvByUserId = async (req, res, next) => {
+  const userId = req.params.userId;
+
+  let userWithCvs;
+  try {
+    userWithCvs = await User.findById(userId).populate("cvs");
+  } catch {
+    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+  }
+
+  if (!userWithCvs || userWithCvs.cvs.length === 0) {
+    return res.status(401).json({ errorMessage: "Can not find cvs with this user, please try again" });
+  }
+  res.json({
+    cvs: userWithCvs.cvs.map((cv) =>
+      cv.toObject({ getters: true })
+    ),
+  });
 }
 
 export const createCV = async (req, res, next) => {
-  const { userId } = req.params;
+  const { userId, cvName } = req.params;
 
-  const createdCV = new CV({ userId })
+  const createdCV = new CV({
+    userId,
+    cvName,
+  })
 
   let user;
   try {
@@ -45,7 +86,36 @@ export const createCV = async (req, res, next) => {
     console.log(err);
     return res.status(402).json({ errorMessage: "Fail." });
   }
-  res.status(201).json({ user: createdCV });
+  res.status(201).json({ cv: createdCV });
+}
+
+export const updateCv = async (req, res, next) => {
+  const {
+    cvName,
+  } = req.body;
+
+  const cvId = req.params.cvId;
+
+  let cv;
+  try {
+    cv = await Cv.findById(cvId);
+  } catch {
+    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+  }
+
+  cv.cvName = cvName;
+
+  if (!cvId) {
+    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+  }
+
+  try {
+    await cv.save();
+  } catch (err) {
+    console.log(err);
+    return res.status(402).json({ errorMessage: "Fail." });
+  }
+  res.status(201).json({ cv: cv.toObject({ getters: true }) });
 }
 
 export const createProfile = async (req, res, next) => {
@@ -204,10 +274,7 @@ export const createProject = async (req, res, next) => {
 };
 
 export const updateProject = async (req, res, next) => {
-  const {
-    projectName,
-    projectDescription,
-  } = req.body;
+  const proj = req.body.project;
 
   const projectId = req.params.projectId;
 
@@ -218,8 +285,7 @@ export const updateProject = async (req, res, next) => {
     return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
-  project.projectName = projectName;
-  project.projectDescription = projectDescription;
+  project.project = proj
 
   if (!projectId) {
     return res.status(401).json({ errorMessage: "Can not find this project, please try again" });
@@ -358,11 +424,32 @@ export const updateExtra = async (req, res, next) => {
   res.status(201).json({ extra: extra.toObject({ getters: true }) });
 };
 
-export const updateCv = async (req, res, next) => {
-}
-
 export const deleteCv = async (req, res, next) => {
-}
+  const cvId = req.params.cvId;
+
+  let cv;
+  try {
+    cv = await Cv.findById(cvId).populate("creator")
+  } catch {
+    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again." });
+  }
+
+  if (!cv) {
+    return res.status(401).json({ errorMessage: "Can not find this cv, please try again." });
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await cv.remove({ session: sess });
+    cv.creator.cvs.pull(cv);
+    await cv.creator.save({ session: sess });
+    await sess.commitTransaction();
+  } catch {
+    return res.status(402).json({ errorMessage: "Can not delete this cv, please try again." });
+  }
+  res.status(500).json({ message: "Deleted." });
+};
 
 export const viewCv = async (req, res, next) => {
 }

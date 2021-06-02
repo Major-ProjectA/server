@@ -5,17 +5,7 @@ const UserSchema = new Schema({
   userName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  firstName: { type: String, required: false },
-  lastName: { type: String, required: false },
-  dob: { type: Date, required: false },
-  address: { 
-    street: { type: String, required:false },
-    district: { type: String, required:false },
-    city: { type: String, required:false },
-  },
   role: { type: String, enum : ['user', 'employer', 'admin'] },
-  gender: { type: String, required: false },
-  tel: { type: Number, required: false },
   cvs : [{type : mongoose.Schema.Types.ObjectId, ref: 'Cv'}],
   jobs : [{type : mongoose.Schema.Types.ObjectId, ref: 'Job'}]
 });
