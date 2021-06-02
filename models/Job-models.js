@@ -3,7 +3,6 @@ export const Schema = mongoose.Schema;
 
 const JobSchema = new Schema(
   {
-    jobId: { type: String, trim: true, require: true },
     detail: { type: String, require: true },
     benefit: { type: String, required: true },
     contact: {

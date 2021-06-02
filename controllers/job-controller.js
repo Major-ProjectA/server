@@ -1,5 +1,5 @@
 import JobData from "../models/Job-models.js";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 
 //Filter, Sorting and Paginating
 class APIfeatures {
@@ -91,7 +91,6 @@ export const getJobHot = async (req, res) => {
 export const createJobs = async (req, res) => {
   try {
     const {
-      jobId,
       imgCom,
       detail,
       benefit,
@@ -110,9 +109,10 @@ export const createJobs = async (req, res) => {
       isHot,
       numofRecruit,
       experience,
+      startDay,
+      endDay,
     } = req.body;
     const createdJob = new JobData({
-      jobId,
       detail,
       benefit,
       contact: { contactName, contactEmail, contactAddress, contactPhone },
@@ -131,8 +131,10 @@ export const createJobs = async (req, res) => {
       isHot,
       numofRecruit,
       experience,
-      startDay: dayjs(),
-      endDay: dayjs().add("30", "day"),
+      // startDay: dayjs(),
+      // endDay: dayjs().add("30", "day"),
+      startDay,
+      endDay,
     });
 
     await createdJob.save();
@@ -170,9 +172,12 @@ export const updateJobs = async (req, res) => {
       siteCom,
       thumbnail,
       category,
+      otherInfo,
       isHot,
       numofRecruit,
-      exp,
+      experience,
+      startDay,
+      endDay,
     } = req.body;
 
     await JobData.findOneAndUpdate(
@@ -192,11 +197,14 @@ export const updateJobs = async (req, res) => {
         siteCom,
         thumbnail,
         category,
+        otherInfo,
         isHot,
         numofRecruit,
-        exp,
-        startDay: dayjs(),
-        endDay: dayjs().add("30", "day"),
+        experience,
+        // startDay: dayjs(),
+        // endDay: dayjs().add("30", "day"),
+        startDay,
+        endDay,
       }
     );
 
