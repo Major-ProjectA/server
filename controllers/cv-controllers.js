@@ -24,7 +24,8 @@ export const getCvById = async (req, res, next) => {
 
   let cv;
   try {
-    cv = await Cv.findById(cvId);
+    cv = await Cv.findById(cvId).populate("profile").populate("education").populate("project").populate("experience").populate("extra");
+    console.log(cv)
   } catch {
     return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
   }
@@ -56,11 +57,14 @@ export const getCvByUserId = async (req, res, next) => {
 }
 
 export const createCV = async (req, res, next) => {
-  const { userId, cvName } = req.params;
+  const { userId, cvName, cvImage, bio, position, } = req.params;
 
   const createdCV = new CV({
     userId,
     cvName,
+    cvImage,
+    bio,
+    position
   })
 
   let user;
@@ -92,6 +96,9 @@ export const createCV = async (req, res, next) => {
 export const updateCv = async (req, res, next) => {
   const {
     cvName,
+    cvImage,
+    position,
+    bio,
   } = req.body;
 
   const cvId = req.params.cvId;
@@ -104,6 +111,9 @@ export const updateCv = async (req, res, next) => {
   }
 
   cv.cvName = cvName;
+  cv.cvImage = cvImage;
+  cv.position = position;
+  cv.bio = bio;
 
   if (!cvId) {
     return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
@@ -331,12 +341,7 @@ export const createExperience = async (req, res, next) => {
 };
 
 export const updateExperience = async (req, res, next) => {
-  const {
-    companyName,
-    duration,
-    position,
-    expDescription,
-  } = req.body;
+  const { expDescription } = req.body;
 
   const experienceId = req.params.expId;
 
@@ -347,9 +352,6 @@ export const updateExperience = async (req, res, next) => {
     return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
-  experience.companyName = companyName;
-  experience.duration = duration;
-  experience.position = position;
   experience.expDescription = expDescription;
 
   if (!experienceId) {
@@ -429,7 +431,7 @@ export const deleteCv = async (req, res, next) => {
 
   let cv;
   try {
-    cv = await Cv.findById(cvId).populate("creator")
+    cv = await Cv.findById(cvId).populate("creator").populate("profile").populate("education").populate("project").populate("experience").populate("extra");
   } catch {
     return res.status(400).json({ errorMessage: "Some thing went wrong, please try again." });
   }
@@ -450,6 +452,3 @@ export const deleteCv = async (req, res, next) => {
   }
   res.status(500).json({ message: "Deleted." });
 };
-
-export const viewCv = async (req, res, next) => {
-}

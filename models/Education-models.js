@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const EducationSchema = mongoose.Schema({
-  education : []
+  education : [],
 });
 
 const Education = mongoose.model("Education", EducationSchema);
