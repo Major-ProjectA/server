@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 const CvSchema = mongoose.Schema({
   cvName: { type: String, default: '' },
+  cvImage: { type: String, default: '' },
+  bio: { type: String, default: '' },
+  position: { type: String, default: '' },
   profile: [{ type: mongoose.Types.ObjectId, required: true, ref: "Profile" }],
   education: [{ type: mongoose.Types.ObjectId, required: true, ref: "Education" }],
   project: [{ type: mongoose.Types.ObjectId, required: true, ref: "Project" }],
