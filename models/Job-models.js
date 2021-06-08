@@ -35,6 +35,10 @@ const JobSchema = new Schema(
     experience: { type: String, require: true },
     startDay: { type: Date, require: true },
     endDay: { type: Date, require: true },
+    favoriteUser: {
+      type: Array,
+      default: [],
+    },
   },
   {
     timestamps: true, //important
