@@ -2,6 +2,7 @@ import express from "express";
 import { 
     getCv, getCvById, getCvByUserId, createProfile, updateCv, deleteCv, createCV, createEducation, createProject, createExperience, updateProfile, updateEducation, updateProject, updateExperience, createExtra, updateExtra
 } from "../controllers/cv-controllers.js";
+//import fileUpload from '../middleware/file-upload';
 
 const router = express.Router();
 
