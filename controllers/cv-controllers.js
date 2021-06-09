@@ -32,7 +32,6 @@ export const getCvById = async (req, res, next) => {
       .populate("project")
       .populate("experience")
       .populate("extra");
-    // console.log(cv)
   } catch {
     return res
       .status(400)
@@ -249,33 +248,34 @@ export const createEducation = async (req, res, next) => {
 };
 
 export const updateEducation = async (req, res, next) => {
-  const edu = req.body.education;
+  const { education } = req.body;
 
-  const educationId = req.params.eduId;
-  let education;
+  const eduId = req.params.eduId;
+
+  let edu;
   try {
-    education = await Education.findById(educationId);
+    edu = await Education.findById(eduId);
   } catch {
     return res
       .status(400)
       .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
-  education.education = edu;
+  edu.education = education;
 
-  if (!educationId) {
+  if (!eduId) {
     return res
       .status(401)
-      .json({ errorMessage: "Can not find this education, please try again" });
+      .json({ errorMessage: "Can not find this project, please try again" });
   }
 
   try {
-    await education.save();
+    await edu.save();
   } catch (err) {
     console.log(err);
     return res.status(402).json({ errorMessage: "Fail." });
   }
-  res.status(201).json({ education: education.toObject({ getters: true }) });
+  res.status(201).json({ edu: edu.toObject({ getters: true }) });
 };
 
 export const createProject = async (req, res, next) => {
@@ -313,20 +313,20 @@ export const createProject = async (req, res, next) => {
 };
 
 export const updateProject = async (req, res, next) => {
-  const proj = req.body.project;
+  const { project } = req.body;
 
   const projectId = req.params.projectId;
 
-  let project;
+  let prj;
   try {
-    project = await Project.findById(projectId);
+    prj = await Project.findById(projectId);
   } catch {
     return res
       .status(400)
       .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
-  project.project = proj;
+  prj.project = project;
 
   if (!projectId) {
     return res
@@ -335,12 +335,12 @@ export const updateProject = async (req, res, next) => {
   }
 
   try {
-    await project.save();
+    await prj.save();
   } catch (err) {
     console.log(err);
     return res.status(402).json({ errorMessage: "Fail." });
   }
-  res.status(201).json({ project: project.toObject({ getters: true }) });
+  res.status(201).json({ prj: prj.toObject({ getters: true }) });
 };
 
 export const createExperience = async (req, res, next) => {

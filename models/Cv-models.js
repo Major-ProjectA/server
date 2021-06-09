@@ -5,6 +5,7 @@ const CvSchema = mongoose.Schema({
   cvImage: { type: String, default: '' },
   bio: { type: String, default: '' },
   position: { type: String, default: '' },
+  status: { type: Number, default: 0 },
   profile: [{ type: mongoose.Types.ObjectId, required: true, ref: "Profile" }],
   education: [{ type: mongoose.Types.ObjectId, required: true, ref: "Education" }],
   project: [{ type: mongoose.Types.ObjectId, required: true, ref: "Project" }],

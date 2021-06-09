@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 const ProjectSchema = mongoose.Schema({
-  project : []
+  project: {
+    type: String,
+    default: '',
+  },
 });
 
 const Project = mongoose.model("Project", ProjectSchema);

@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 import fileUpload from "express-fileupload";
 
 import UserRoutes from "./routes/user-routes.js";
@@ -39,6 +41,22 @@ app.use("/api/jobs", JobRoutes);
 app.use("/api/photo", UploadRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/cvs", CVRoutes);
+
+app.use("/uploads/image", express.static(path.join("uploads", "image")));
+
+app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
+
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error occurred!" });
+});
 
 const PORT = process.env.PORT || 5000;
 mongoose.set("useFindAndModify", false);
