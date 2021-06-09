@@ -14,27 +14,38 @@ export const getCv = async (req, res, next) => {
   try {
     cv = await Cv.find({});
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
   res.json({ cv: cv.map((u) => u.toObject({ getters: true })) });
-}
+};
 
 export const getCvById = async (req, res, next) => {
   const cvId = req.params.cvId;
 
   let cv;
   try {
-    cv = await Cv.findById(cvId).populate("profile").populate("education").populate("project").populate("experience").populate("extra");
-    console.log(cv)
+    cv = await Cv.findById(cvId)
+      .populate("profile")
+      .populate("education")
+      .populate("project")
+      .populate("experience")
+      .populate("extra");
+    // console.log(cv)
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!cv) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again" });
   }
   res.json({ cv: cv.toObject({ getters: true }) });
-}
+};
 
 export const getCvByUserId = async (req, res, next) => {
   const userId = req.params.userId;
@@ -43,39 +54,45 @@ export const getCvByUserId = async (req, res, next) => {
   try {
     userWithCvs = await User.findById(userId).populate("cvs");
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!userWithCvs || userWithCvs.cvs.length === 0) {
-    return res.status(401).json({ errorMessage: "Can not find cvs with this user, please try again" });
+    return res.status(401).json({
+      errorMessage: "Can not find cvs with this user, please try again",
+    });
   }
   res.json({
-    cvs: userWithCvs.cvs.map((cv) =>
-      cv.toObject({ getters: true })
-    ),
+    cvs: userWithCvs.cvs.map((cv) => cv.toObject({ getters: true })),
   });
-}
+};
 
 export const createCV = async (req, res, next) => {
-  const { userId, cvName, cvImage, bio, position, } = req.params;
+  const { userId, cvName, cvImage, bio, position } = req.params;
 
   const createdCV = new CV({
     userId,
     cvName,
     cvImage,
     bio,
-    position
-  })
+    position,
+  });
 
   let user;
   try {
     user = await User.findById(userId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!user) {
-    return res.status(401).json({ errorMessage: "Can not find this user, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this user, please try again" });
   }
 
   try {
@@ -91,15 +108,10 @@ export const createCV = async (req, res, next) => {
     return res.status(402).json({ errorMessage: "Fail." });
   }
   res.status(201).json({ cv: createdCV });
-}
+};
 
 export const updateCv = async (req, res, next) => {
-  const {
-    cvName,
-    cvImage,
-    position,
-    bio,
-  } = req.body;
+  const { cvName, cvImage, position, bio } = req.body;
 
   const cvId = req.params.cvId;
 
@@ -107,7 +119,9 @@ export const updateCv = async (req, res, next) => {
   try {
     cv = await Cv.findById(cvId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   cv.cvName = cvName;
@@ -116,7 +130,9 @@ export const updateCv = async (req, res, next) => {
   cv.bio = bio;
 
   if (!cvId) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again" });
   }
 
   try {
@@ -126,7 +142,7 @@ export const updateCv = async (req, res, next) => {
     return res.status(402).json({ errorMessage: "Fail." });
   }
   res.status(201).json({ cv: cv.toObject({ getters: true }) });
-}
+};
 
 export const createProfile = async (req, res, next) => {
   const { cvId } = req.params;
@@ -137,11 +153,15 @@ export const createProfile = async (req, res, next) => {
   try {
     cv = await CV.findById(cvId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!cv) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again" });
   }
 
   try {
@@ -159,14 +179,7 @@ export const createProfile = async (req, res, next) => {
 };
 
 export const updateProfile = async (req, res, next) => {
-  const {
-    firstname,
-    lastname,
-    dob,
-    email,
-    address,
-    phone
-  } = req.body;
+  const { firstname, lastname, dob, email, address, phone } = req.body;
 
   const profileId = req.params.profileId;
 
@@ -174,7 +187,9 @@ export const updateProfile = async (req, res, next) => {
   try {
     profile = await Profile.findById(profileId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   profile.firstname = firstname;
@@ -185,7 +200,9 @@ export const updateProfile = async (req, res, next) => {
   profile.phone = phone;
 
   if (!profileId) {
-    return res.status(401).json({ errorMessage: "Can not find this profile, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this profile, please try again" });
   }
 
   try {
@@ -206,11 +223,15 @@ export const createEducation = async (req, res, next) => {
   try {
     cv = await CV.findById(cvId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!cv) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again" });
   }
 
   try {
@@ -235,13 +256,17 @@ export const updateEducation = async (req, res, next) => {
   try {
     education = await Education.findById(educationId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   education.education = edu;
 
   if (!educationId) {
-    return res.status(401).json({ errorMessage: "Can not find this education, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this education, please try again" });
   }
 
   try {
@@ -262,11 +287,15 @@ export const createProject = async (req, res, next) => {
   try {
     cv = await CV.findById(cvId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!cv) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again" });
   }
 
   try {
@@ -292,13 +321,17 @@ export const updateProject = async (req, res, next) => {
   try {
     project = await Project.findById(projectId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
-  project.project = proj
+  project.project = proj;
 
   if (!projectId) {
-    return res.status(401).json({ errorMessage: "Can not find this project, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this project, please try again" });
   }
 
   try {
@@ -319,11 +352,15 @@ export const createExperience = async (req, res, next) => {
   try {
     cv = await CV.findById(cvId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!cv) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again" });
   }
 
   try {
@@ -349,13 +386,17 @@ export const updateExperience = async (req, res, next) => {
   try {
     experience = await Experience.findById(experienceId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   experience.expDescription = expDescription;
 
   if (!experienceId) {
-    return res.status(401).json({ errorMessage: "Can not find this experience, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this experience, please try again" });
   }
 
   try {
@@ -376,11 +417,15 @@ export const createExtra = async (req, res, next) => {
   try {
     cv = await CV.findById(cvId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   if (!cv) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again" });
   }
 
   try {
@@ -398,9 +443,7 @@ export const createExtra = async (req, res, next) => {
 };
 
 export const updateExtra = async (req, res, next) => {
-  const {
-    addInfor,
-  } = req.body;
+  const { addInfor } = req.body;
 
   const extraId = req.params.extraId;
 
@@ -408,13 +451,17 @@ export const updateExtra = async (req, res, next) => {
   try {
     extra = await Extra.findById(extraId);
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again" });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again" });
   }
 
   extra.addInfor = addInfor;
 
   if (!extraId) {
-    return res.status(401).json({ errorMessage: "Can not find this experience, please try again" });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this experience, please try again" });
   }
 
   try {
@@ -431,13 +478,23 @@ export const deleteCv = async (req, res, next) => {
 
   let cv;
   try {
-    cv = await Cv.findById(cvId).populate("creator").populate("profile").populate("education").populate("project").populate("experience").populate("extra");
+    cv = await Cv.findById(cvId)
+      .populate("creator")
+      .populate("profile")
+      .populate("education")
+      .populate("project")
+      .populate("experience")
+      .populate("extra");
   } catch {
-    return res.status(400).json({ errorMessage: "Some thing went wrong, please try again." });
+    return res
+      .status(400)
+      .json({ errorMessage: "Some thing went wrong, please try again." });
   }
 
   if (!cv) {
-    return res.status(401).json({ errorMessage: "Can not find this cv, please try again." });
+    return res
+      .status(401)
+      .json({ errorMessage: "Can not find this cv, please try again." });
   }
 
   try {
@@ -448,7 +505,9 @@ export const deleteCv = async (req, res, next) => {
     await cv.creator.save({ session: sess });
     await sess.commitTransaction();
   } catch {
-    return res.status(402).json({ errorMessage: "Can not delete this cv, please try again." });
+    return res
+      .status(402)
+      .json({ errorMessage: "Can not delete this cv, please try again." });
   }
   res.status(500).json({ message: "Deleted." });
 };

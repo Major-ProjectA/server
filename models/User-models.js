@@ -8,7 +8,7 @@ const UserSchema = new Schema({
   role: { type: String, enum: ["user", "employer", "admin"] },
   cvs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Cv" }],
   jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],
-  favoriteJob: {
+  favorite: {
     type: Array,
     default: [],
   },

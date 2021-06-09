@@ -20,6 +20,6 @@ router.get("/:uid", getUserById);
 router.get("/uusername", getUserByUsername);
 router.patch("/:uid", updateUserByAdmin);
 router.delete("/:uid", deleteUser);
-router.post("/addfavoritejob/:userId/:jobId", addFavoriteJob);
+router.patch("/addfavoritejob/:uid", addFavoriteJob);
 
 export default router;

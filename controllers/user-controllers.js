@@ -193,47 +193,48 @@ export const deleteUser = async (req, res, next) => {
   res.status(201).json({ Message: "Delete user successfully." });
 };
 
-export const addFavoriteJob = async (req, res, next) => {
+export const addFavoriteJob = async (req, res) => {
   // try {
-  //   // const user = await User.findById(req.user.id);
+  //   const user = await User.findById(req.user.id);
   //   if (!user) return res.status(400).json({ msg: "User does not exist." });
-  //   // await User.create({ _id: req.user.id }, { favoriteJob: req.favoriteJob });
 
-  //   return res.json({ msg: "Added to cart" });
+  //   await User.findOneAndUpdate(
+  //     { _id: req.user.id },
+  //     // { favorite: req.body.favorite },
+  //   );
+
+  //   return res.json({ msg: "Added to favorite job" });
   // } catch (err) {
   //   return res.status(500).json({ msg: err.message });
   // }
+  /********************************************/
 
-  const { jobId, userId } = req.params;
+  const { favorite } = req.body;
+  const userId = req.params.uid;
 
-  let user;
-  let job;
+  // if (!userName || !email || !role)
+  //   return res
+  //     .status(400)
+  //     .json({ errorMessage: "All fields should not empty." });
+
+  let favoritejob;
   try {
-    user = await User.findById(userId);
-    job = await Job.findById(jobId);
+    favoritejob = await User.findById(userId);
+  } catch {
+    return res.status(401).json({ errorMessage: "Can not find this user." });
+  }
+
+  favoritejob.favorite = favorite;
+
+  try {
+    await favoritejob.save();
   } catch {
     return res
       .status(400)
-      .json({ errorMessage: "Some thing went wrong, please try again" });
+      .json({ errorMessage: "Update user failed, please try again." });
   }
-
-  if (!user) {
-    return res
-      .status(401)
-      .json({ errorMessage: "Can not find this user, please try again" });
-  }
-
-  try {
-    const sess = await mongoose.startSession();
-    sess.startTransaction();
-    job.favoriteUser.push(user);
-    await job.save({ session: sess });
-    user.favoriteJob.push(job);
-    await user.save({ sess: sess });
-    await sess.commitTransaction();
-  } catch (err) {
-    console.log(err);
-    return res.status(402).json({ errorMessage: "Fail." });
-  }
-  res.status(201).json({ user });
+  res.status(201).json({
+    Message: "Update user successfully.",
+    user: favoritejob.toObject({ getters: true }),
+  });
 };
