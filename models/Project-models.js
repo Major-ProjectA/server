@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const ProjectSchema = mongoose.Schema({
   project: {
     type: String,
-    default: '',
+    default: 'null',
   },
 });
 

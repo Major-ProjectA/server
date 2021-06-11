@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const ExtraSchema = mongoose.Schema({
   addInfor: {
     type: String,
-    default: '',
+    default: 'null',
   },
 });
 

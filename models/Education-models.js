@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const EducationSchema = mongoose.Schema({
   education: {
     type: String,
-    default: '',
+    default: 'null',
   },
 });
 

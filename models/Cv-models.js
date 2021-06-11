@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const CvSchema = mongoose.Schema({
-  cvName: { type: String, default: '' },
-  cvImage: { type: String, default: '' },
-  bio: { type: String, default: '' },
-  position: { type: String, default: '' },
+  cvName: { type: String, default: 'null' },
+  cvImage: { type: String, default: 'null' },
+  bio: { type: String, default: 'null' },
+  position: { type: String, default: 'null' },
   status: { type: Number, default: 0 },
   profile: [{ type: mongoose.Types.ObjectId, required: true, ref: "Profile" }],
   education: [{ type: mongoose.Types.ObjectId, required: true, ref: "Education" }],
